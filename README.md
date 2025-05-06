@@ -1,20 +1,7 @@
-# Superchain Starter Kit: InitialSupplySuperchainERC20
-
-> Generated from [superchain-starter](https://github.com/ethereum-optimism/superchain-starter). See the original repository for a more detailed development guide.
-> 
-> SuperchainERC20s can be deployed on any chain, but will only be interoperable within the [Superchain interop cluster](https://docs.optimism.io/stack/interop/explainer#superchain-interop-cluster).
-
-Example SuperchainERC20 token (contract + frontend) implementation. The frontend includes a simple bridge interface & event log viewer to see the flow funds.
-
-<img width="1580" alt="Screenshot 2025-02-18 at 9 12 01 PM" src="https://github.com/user-attachments/assets/b891cd06-04d0-4a3a-ae78-2dcce569b3cc" />
+# Misbar Governance Token
 
 ## 📝 Overview
-
-InitialSupplySuperchainERC20 is a SuperchainERC20-compatible token that implements a "home chain" minting model. The contract:
-
-1. Mints the entire token supply once on a designated "home chain"
-2. Can be deployed across multiple chains at the same address
-3. Allows tokens to be bridged between chains using standard SuperchainERC20 mechanisms
+This is using the template from https://github.com/ethereum-optimism/superchain-starter-superchainerc20
 
 ## 🔗 Contracts
 
@@ -31,14 +18,10 @@ InitialSupplySuperchainERC20 is a SuperchainERC20-compatible token that implemen
 
 Follow [this guide](https://book.getfoundry.sh/getting-started/installation) to install Foundry
 
-### 1. Create a new repository using this template:
-
-Click the "Use this template" button above on GitHub, or [generate directly](https://github.com/new?template_name=superchain-starter&template_owner=ethereum-optimism)
-
 ### 2. Clone your new repository
 
 ```bash
-git clone <your-new-repository-url>
+git clone <repository-url>
 cd superchain-starter-initial-supply-token
 ```
 
@@ -48,7 +31,13 @@ cd superchain-starter-initial-supply-token
 pnpm i
 ```
 
-### 4. Get started
+### 4. Install forge dependencies
+
+```bash
+cd contracts && forge install && forge build
+```
+
+### 5. Get started
 
 ```bash
 pnpm dev
@@ -59,6 +48,11 @@ This command will:
 - Start a local Superchain network (1 L1 chain and 2 L2 chains) using [supersim](https://github.com/ethereum-optimism/supersim)
 - Launch the frontend development server at (http://localhost:5173)
 - Deploy the tokens all of the L2 chains in the local network
+
+### 6. Update contract deployment
+```bash
+forge script script/Deploy.s.sol --broadcast
+```
 
 Start building on the Superchain!
 
