@@ -11,7 +11,7 @@ import { Ownable } from '@solady/auth/Ownable.sol';
 import { ERC20 } from '@solady/tokens/ERC20.sol';
 
 // Target contract
-import { InitialSupplySuperchainERC20 } from 'src/InitialSupplySuperchainERC20.sol';
+import { InitialSupplyMisbarTokenERC20 } from 'src/InitialSupplyMisbarTokenERC20.sol';
 
 /// @title L2NativeSuperchainERC20Test
 /// @notice Contract for testing the L2NativeSuperchainERC20Test contract.
@@ -25,14 +25,14 @@ contract InitialSupplySuperchainERC20Test is Test {
 
   uint256 internal constant INITIAL_SUPPLY = 1_000_000_000 ether;
 
-  InitialSupplySuperchainERC20 public superchainERC20;
+  InitialSupplyMisbarTokenERC20 public misbarTokenERC20;
 
   /// @notice Sets up the test suite.
   function setUp() public {
     owner = makeAddr('owner');
     alice = makeAddr('alice');
     bob = makeAddr('bob');
-    superchainERC20 = new InitialSupplySuperchainERC20(
+    misbarTokenERC20 = new InitialSupplyMisbarTokenERC20(
       owner,
       'Misbar',
       'MISBAR',
@@ -54,20 +54,20 @@ contract InitialSupplySuperchainERC20Test is Test {
 
   /// @notice Tests the metadata of the token is set correctly.
   function testMetadata() public view {
-    assertEq(superchainERC20.name(), 'Misbar');
-    assertEq(superchainERC20.symbol(), 'MISBAR');
-    assertEq(superchainERC20.decimals(), 18);
+    assertEq(misbarTokenERC20.name(), 'Misbar');
+    assertEq(misbarTokenERC20.symbol(), 'MISBAR');
+    assertEq(misbarTokenERC20.decimals(), 18);
   }
 
   /// @notice Tests that the initial supply is set correctly.
   function testInitialSupply() public {
-    assertEq(superchainERC20.totalSupply(), INITIAL_SUPPLY);
-    assertEq(superchainERC20.balanceOf(owner), INITIAL_SUPPLY);
+    assertEq(misbarTokenERC20.totalSupply(), INITIAL_SUPPLY);
+    assertEq(misbarTokenERC20.balanceOf(owner), INITIAL_SUPPLY);
   }
 
   /// @notice Tests that the initial supply on non-initialSupplyChain is set correctly.
   function testInitialSupplyNonInitialSupplyChain() public {
-    InitialSupplySuperchainERC20 superchainERC20 = new InitialSupplySuperchainERC20(
+    InitialSupplyMisbarTokenERC20 superchainERC20 = new InitialSupplyMisbarTokenERC20(
       owner,
       'Misbar',
       'MISBAR',
@@ -85,8 +85,8 @@ contract InitialSupplySuperchainERC20Test is Test {
     emit Ownable.OwnershipTransferred(owner, address(0));
 
     vm.prank(owner);
-    superchainERC20.renounceOwnership();
-    assertEq(superchainERC20.owner(), address(0));
+    misbarTokenERC20.renounceOwnership();
+    assertEq(misbarTokenERC20.owner(), address(0));
   }
 
   /// @notice Tests that ownership of the token can be transferred.
@@ -98,9 +98,9 @@ contract InitialSupplySuperchainERC20Test is Test {
     emit Ownable.OwnershipTransferred(owner, _newOwner);
 
     vm.prank(owner);
-    superchainERC20.transferOwnership(_newOwner);
+    misbarTokenERC20.transferOwnership(_newOwner);
 
-    assertEq(superchainERC20.owner(), _newOwner);
+    assertEq(misbarTokenERC20.owner(), _newOwner);
   }
 
   /// @notice Tests that tokens can be transferred using the transfer function.
@@ -110,17 +110,17 @@ contract InitialSupplySuperchainERC20Test is Test {
     vm.assume(_amount < INITIAL_SUPPLY);
 
     vm.prank(owner);
-    superchainERC20.transfer(_sender, _amount);
+    misbarTokenERC20.transfer(_sender, _amount);
 
     vm.expectEmit(true, true, true, true);
     emit IERC20.Transfer(_sender, bob, _amount);
 
     vm.prank(_sender);
-    assertTrue(superchainERC20.transfer(bob, _amount));
-    assertEq(superchainERC20.totalSupply(), INITIAL_SUPPLY);
+    assertTrue(misbarTokenERC20.transfer(bob, _amount));
+    assertEq(misbarTokenERC20.totalSupply(), INITIAL_SUPPLY);
 
-    assertEq(superchainERC20.balanceOf(_sender), 0);
-    assertEq(superchainERC20.balanceOf(bob), _amount);
+    assertEq(misbarTokenERC20.balanceOf(_sender), 0);
+    assertEq(misbarTokenERC20.balanceOf(bob), _amount);
   }
 
   /// @notice Tests that tokens can be transferred using the transferFrom function.
@@ -132,20 +132,20 @@ contract InitialSupplySuperchainERC20Test is Test {
 
     vm.prank(owner);
     // owner owns all supply initially
-    superchainERC20.transfer(bob, _amount);
+    misbarTokenERC20.transfer(bob, _amount);
 
-    assertEq(superchainERC20.balanceOf(bob), _amount);
+    assertEq(misbarTokenERC20.balanceOf(bob), _amount);
 
     vm.prank(bob);
-    superchainERC20.approve(_spender, _amount);
+    misbarTokenERC20.approve(_spender, _amount);
 
     vm.prank(_spender);
     vm.expectEmit(true, true, true, true);
     emit IERC20.Transfer(bob, alice, _amount);
-    assertTrue(superchainERC20.transferFrom(bob, alice, _amount));
+    assertTrue(misbarTokenERC20.transferFrom(bob, alice, _amount));
 
-    assertEq(superchainERC20.balanceOf(bob), 0);
-    assertEq(superchainERC20.balanceOf(alice), _amount);
+    assertEq(misbarTokenERC20.balanceOf(bob), 0);
+    assertEq(misbarTokenERC20.balanceOf(alice), _amount);
   }
 
   /// @notice tests that an insufficient balance cannot be transferred.
@@ -158,11 +158,11 @@ contract InitialSupplySuperchainERC20Test is Test {
     _sendAmount = bound(_sendAmount, _mintAmount + 1, INITIAL_SUPPLY);
 
     vm.prank(owner);
-    superchainERC20.transfer(bob, _mintAmount);
+    misbarTokenERC20.transfer(bob, _mintAmount);
 
     vm.prank(bob);
     vm.expectRevert(ERC20.InsufficientBalance.selector);
-    superchainERC20.transfer(_to, _sendAmount);
+    misbarTokenERC20.transfer(_to, _sendAmount);
   }
 
   /// @notice tests that an insufficient allowance cannot be transferred.
@@ -181,13 +181,13 @@ contract InitialSupplySuperchainERC20Test is Test {
     vm.assume(_approval < type(uint256).max); // Ensure approval isn't max uint256
 
     vm.prank(owner);
-    superchainERC20.transfer(alice, _amount); // Transfer tokens to alice first
+    misbarTokenERC20.transfer(alice, _amount); // Transfer tokens to alice first
 
     vm.prank(alice);
-    superchainERC20.approve(_spender, _approval); // Alice approves spender for less than transfer amount
+    misbarTokenERC20.approve(_spender, _approval); // Alice approves spender for less than transfer amount
 
     vm.prank(_spender);
     vm.expectRevert(ERC20.InsufficientAllowance.selector);
-    superchainERC20.transferFrom(alice, _to, _amount); // Try to transfer more than approved
+    misbarTokenERC20.transferFrom(alice, _to, _amount); // Try to transfer more than approved
   }
 }

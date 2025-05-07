@@ -4,7 +4,7 @@ pragma solidity 0.8.25;
 import { SuperchainERC20 } from '@interop-lib/SuperchainERC20.sol';
 import { Ownable } from '@solady/auth/Ownable.sol';
 
-contract InitialSupplySuperchainERC20 is SuperchainERC20, Ownable {
+contract InitialSupplyMisbarTokenERC20 is SuperchainERC20, Ownable {
   string private _name;
   string private _symbol;
   uint8 private immutable _decimals;

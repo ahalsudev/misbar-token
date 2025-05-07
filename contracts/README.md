@@ -1,6 +1,6 @@
 # Contracts
 
-Smart contracts demonstrating cross-chain messaging on the Superchain using [interoperability](https://specs.optimism.io/interop/overview.html).
+Smart contracts demonstrating cross-chain messaging on the Superchain using [interoperability](f).
 
 ## Contracts
 
